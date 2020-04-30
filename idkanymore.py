@@ -35,6 +35,7 @@ def check(a,b):
     cnt = list(b).count('1')
     return cnt
 
+input("Hit enter to start.")
 while True:
     kill = []
     revive = []
