@@ -2,19 +2,29 @@ import os
 import time
 import numpy as np
 from itertools import product
-ROWS = 17
-COLS = 17
-X = '\u2B1B'
-Y = '\u2B1C'
+ROWS = 60
+COLS = 30
 
-grid = np.array([Y for i in range(ROWS*COLS)]).reshape(ROWS,COLS)
+FILLED = '\u2B1B'
+EMPTY = '\u2B1C'
 
-# Glider :P
-grid[3,13] = X
-grid[4,12] = X
-grid[5,12] = X
-grid[5,13] = X
-grid[5,14] = X
+grid = np.array([EMPTY for i in range(COLS*ROWS)]).reshape(COLS,ROWS)
+
+def glider(x,y):
+    coords = []
+    for a,b in product(range(3),range(3)):
+        coords.append((0,0))
+    coords[2] = (x+1,y+3)
+    coords[3] = (x+2,y+1)
+    coords[6] = (x+3,y+1)
+    coords[7] = (x+3,y+2)
+    coords[8] = (x+3,y+3)
+    for i in coords:
+        grid[i[0],i[1]] = FILLED
+
+
+glider(20,50)
+
 
 def check(a,b):
     x = [a-1,a,a+1]
@@ -34,28 +44,29 @@ def check(a,b):
 
     box = grid[np.ix_([x[0],x[1],x[2]],[y[0],y[1],y[2]])]
     b = box.ravel()
-    cnt = list(b).count(X)
+    cnt = list(b).count(FILLED)
     return cnt
 
-input("Hit enter to start.")
+# input("Hit enter to start.")
 while True:
     kill = []
     revive = []
     os.system('cls' if os.name == 'nt' else 'clear')
+    g = ''
     for i in grid:
-        print(''.join(list(i)))
-    # print(grid)
+        g += (''.join(list(i))+'\n')
+    print(g)
     time.sleep(.1)
-    for x,y in product(range(ROWS), range(COLS)):
+    for x,y in product(range(COLS), range(ROWS)):
         cnt = check(x,y)
-        if grid[x,y] == X:
+        if grid[x,y] == FILLED:
             if cnt < 3 or cnt > 4:
                 kill.append((x,y))
-        elif grid[x,y] == Y:
+        elif grid[x,y] == EMPTY:
             if cnt == 3:
                 revive.append((x,y))
 
     for i in kill:
-        grid[i[0],i[1]] = Y
+        grid[i[0],i[1]] = EMPTY
     for i in revive:
-        grid[i[0],i[1]] = X
+        grid[i[0],i[1]] = FILLED
