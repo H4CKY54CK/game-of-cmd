@@ -1,5 +1,5 @@
 # game-of-cmd
-Game of Life, but in CMD. Done poorly.
+Game of Life in pygame.
 
 ## Instructions
 
