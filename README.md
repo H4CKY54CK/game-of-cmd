@@ -17,3 +17,4 @@ You need `pygame` and `numpy` to run this.
 - Left Click - Fill in cell (supports dragging the cursor to color in squares)
 - Right Click - Erase cell (supports dragging the cursor to color in squares)
 
+ ![preview](https://github.com/H4CKY54CK/game-of-life/blob/master/preview.png)
