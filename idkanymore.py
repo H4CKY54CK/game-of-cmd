@@ -2,28 +2,44 @@ import os
 import time
 import numpy as np
 from itertools import product
+COLS = 60
 ROWS = 60
-COLS = 30
 
 FILLED = '\u2B1B'
 EMPTY = '\u2B1C'
 
-grid = np.array([EMPTY for i in range(COLS*ROWS)]).reshape(COLS,ROWS)
+grid = np.array([EMPTY for i in range(ROWS*COLS)]).reshape(ROWS,COLS)
 
-def glider(x,y):
-    coords = []
-    for a,b in product(range(3),range(3)):
-        coords.append((0,0))
-    coords[2] = (x+1,y+3)
-    coords[3] = (x+2,y+1)
-    coords[6] = (x+3,y+1)
-    coords[7] = (x+3,y+2)
-    coords[8] = (x+3,y+3)
-    for i in coords:
-        grid[i[0],i[1]] = FILLED
+def glider(x, y, direction=None):
+    if direction is None:
+        direciton = 'right'
+    g = np.array([EMPTY for i in range(9)]).reshape(3,3)
+    g[0,1] = FILLED
+    if direction == 'right':
+        g[1,2] = FILLED
+    if direction == 'left':
+        g[1,0] = FILLED
+    g[2,0] = FILLED
+    g[2,1] = FILLED
+    g[2,2] = FILLED
+    grid[x:x+3,y:y+3] = g
+glider(20,50, 'left')
+glider(20,20, 'right')
+glider(40,20, 'right')
+glider(40,50, 'left')
 
 
-glider(20,50)
+def spaceship(x,y):
+    g = np.array([EMPTY for i in range(20)]).reshape(4,5)
+    g[0,0] = FILLED
+    g[0,3] = FILLED
+    g[1,4] = FILLED
+    g[2,0] = FILLED
+    g[2,4] = FILLED
+    g[3,1:5] = FILLED
+    grid[x:x+4, y:y+5] = g
+spaceship(5,5)
+
 
 
 def check(a,b):
@@ -47,7 +63,7 @@ def check(a,b):
     cnt = list(b).count(FILLED)
     return cnt
 
-# input("Hit enter to start.")
+input("Hit enter to start.")
 while True:
     kill = []
     revive = []
@@ -56,8 +72,8 @@ while True:
     for i in grid:
         g += (''.join(list(i))+'\n')
     print(g)
-    time.sleep(.1)
-    for x,y in product(range(COLS), range(ROWS)):
+    time.sleep(.05)
+    for x,y in product(range(ROWS), range(COLS)):
         cnt = check(x,y)
         if grid[x,y] == FILLED:
             if cnt < 3 or cnt > 4:
