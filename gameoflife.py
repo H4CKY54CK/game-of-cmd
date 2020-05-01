@@ -7,8 +7,8 @@ from collections import deque
 
 
 # 80 x 80 runs ok, but it really starts to slow down after that.
-COLS = 60
-ROWS = 60
+COLS = ROWS = 120
+# ROWS = 120
 
 # Used to be unicode values. Made it easy to switch it up on-the-fly.
 FILLED = 1
@@ -33,29 +33,38 @@ MARGIN = 1
 class GameOfLife:
 
     def __init__(self):
-        self.grid = np.array([EMPTY for i in range(ROWS*COLS)]).reshape(ROWS,COLS)
+        self.grid = np.zeros(ROWS*COLS, dtype=bool).reshape(COLS,ROWS)
 
     # Counts neighbors. Now that I've explained what it does, this seems unnecessarily complicated.
     def check(self, a, b):
-        x = [a-1,a,a+1]
-        y = [b-1,b,b+1]
+        # x = [a-1,a,a+1]
+        # y = [b-1,b,b+1]
 
-        for e, i in enumerate(x):
-            if i < 0:
-                x[e] = 0
-            elif i == len(self.grid[:,0]):
-                x[e] = len(self.grid[:,0])-1
+        # for e, i in enumerate(x):
+        #     if i < 0:
+        #         x[e] = 0
+        #     elif i == len(self.grid[:,0]):
+        #         x[e] = len(self.grid[:,0])-1
 
-        for e, i in enumerate(y):
-            if i < 0:
-                y[e] = 0
-            elif i == len(self.grid[0,:]):
-                y[e] = len(self.grid[0,:])-1
+        # for e, i in enumerate(y):
+        #     if i < 0:
+        #         y[e] = 0
+        #     elif i == len(self.grid[0,:]):
+        #         y[e] = len(self.grid[0,:])-1
 
-        box = self.grid[np.ix_([x[0],x[1],x[2]],[y[0],y[1],y[2]])]
-        b = box.ravel()
-        cnt = list(b).count(FILLED)
-        return cnt
+        a -= 1
+        b -= 1
+        if a < 0 and b < 0:
+            a = 0
+            b = 0
+            return np.count_nonzero(self.grid[a:a+2,b:b+2])
+        elif a < 0:
+            a = 0
+            return np.count_nonzero(self.grid[a:a+2, b:b+3])
+        elif b < 0:
+            return np.count_nonzero(self.grid[a:a+3, b:b+2])
+        else:
+            return np.count_nonzero(self.grid[a:a+3, b:b+3])
 
     # Reset all the values of the grid.
     def clear(self):
@@ -108,7 +117,7 @@ class GameOfLife:
         for x,y in product(range(ROWS), range(COLS)):
             cnt = self.check(x,y)
             if self.grid[x,y] == FILLED:
-                if cnt < 3 or cnt > 4:
+                if cnt not in set((3,4)):
                     new[x,y] = EMPTY
             elif self.grid[x,y] == EMPTY:
                 if cnt == 3:
@@ -130,7 +139,7 @@ class GameOfLife:
 grid = GameOfLife()
 pygame.init()
  
-screen = pygame.display.set_mode((360,360))
+screen = pygame.display.set_mode((ROWS*6,COLS*6))
  
 pygame.display.set_caption("Game of Life")
  
@@ -138,7 +147,7 @@ pygame.display.set_caption("Game of Life")
 done = False
  
 # Doesn't seem like we need it?
-# clock = pygame.time.Clock()
+clock = pygame.time.Clock()
 
 # Other pre-defaults
 paused = True
@@ -210,7 +219,7 @@ while not done:
                               HEIGHT])
 
     # Not entirely sure why I need this if I have my own updating function.
-    # clock.tick(60)
+    clock.tick(10)
 
     if not paused:
         grid.step()
