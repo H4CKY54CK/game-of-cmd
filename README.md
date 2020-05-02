@@ -5,7 +5,7 @@ Game of Life in pygame.
 
 You need `pygame` and `numpy` to run this.
 
-If you don't have these, and want a no-fuss install/setup, run the installation script (TODO: give installation script a fucking name). It'll handle it for you.
+If you don't have these, and want a no-fuss install/setup, run the installation script `no-fuss-setup.py`. It prompts you before each decision, so don't worry. Not that there's many decisions. There's two.
 
 ### Controls
 
