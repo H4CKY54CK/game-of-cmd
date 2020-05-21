@@ -20,6 +20,7 @@ GX = 200
 GY = 200
 
 grid = np.random.randint(2, size=(GX, GY))
+# grid = np.zeros((GX,GY))
 
 
 grid[50:53,50:53] = [[0,1,0],[0,0,1],[1,1,1]]
@@ -27,9 +28,9 @@ grid[50:53,50:53] = [[0,1,0],[0,0,1],[1,1,1]]
 def step(grid):
     alive = []
     dead = []
-    for x,y in product(range(GX),range(GY)):
+    for (x,y), v in np.ndenumerate(grid):
         z = np.count_nonzero(grid[x-1:x+2,y-1:y+2])
-        if grid[x,y] == 1:
+        if v:
             if z < 3 or z > 4:
                 dead.append((x,y))
         else:
