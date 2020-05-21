@@ -10,14 +10,14 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 2
-HEIGHT = 2
+WIDTH = 1
+HEIGHT = 1
 
 # This sets the margin between each cell
 MARGIN = 0
 
-GX = 100
-GY = 100
+GX = 200
+GY = 200
 
 grid = np.random.randint(2, size=(GX, GY))
 
@@ -35,9 +35,9 @@ def step(grid):
         else:
             if z == 3:
                 alive.append((x,y))
-    for i in alive:
+    for i in set(alive):
         grid[i[0],i[1]] = 1
-    for i in dead:
+    for i in set(dead):
         grid[i[0],i[1]] = 0
     return grid
 
