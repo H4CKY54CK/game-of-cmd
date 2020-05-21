@@ -7,8 +7,9 @@ from collections import deque
 
 
 # 80 x 80 runs ok, but it really starts to slow down after that.
-COLS = ROWS = 120
+COLS = ROWS = 60
 # ROWS = 120
+# COLS = 120
 
 # Used to be unicode values. Made it easy to switch it up on-the-fly.
 FILLED = 1
@@ -70,6 +71,19 @@ class GameOfLife:
     def clear(self):
         for x,y in product(range(ROWS), range(COLS)):
             self.grid[x,y] = 0
+
+
+    def unb(self, x, y):
+        unbounded = [[1, 1, 1, 0, 1],
+                     [1, 0, 0, 0, 0],
+                     [0, 0, 0, 1, 1],
+                     [0, 1, 1, 0, 1],
+                     [1, 0, 1, 0, 1]]
+        unbounded = np.array(unbounded)
+        for a, b in product(range(5),range(5)):
+            if unbounded[a,b] == 1:
+                self.grid[x+a,y+b] = 1
+
 
     # Create a glider.
     def glider(self, x, y, direction=None):
@@ -148,7 +162,9 @@ done = False
  
 # Doesn't seem like we need it?
 clock = pygame.time.Clock()
-
+# For drawing
+speed = 0
+cspeed = 15
 # Other pre-defaults
 paused = True
 leftDragFlag = False
@@ -173,12 +189,27 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONUP:
             leftDragFlag = False
             rightDragFlag = False
-        elif event.type == pygame.KEYDOWN: 
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                speed += 5
+                if speed > 30:
+                    speed = 30
+            if event.key == pygame.K_q:
+                speed -= 5
+                if speed < 10:
+                    speed = 10
             if event.key == pygame.K_p:
                 paused = True if not paused else False
+                speed = 15
             if event.key == pygame.K_r:
+                speed = 0
                 grid.clear()
                 paused = None
+            if event.key == pygame.K_b:
+                try:
+                    grid.unb(row,column)
+                except:
+                    pass
             if event.key == pygame.K_g:
                 try:
                     grid.glider(row, column)
@@ -218,8 +249,7 @@ while not done:
                               WIDTH,
                               HEIGHT])
 
-    # Not entirely sure why I need this if I have my own updating function.
-    clock.tick(10)
+    clock.tick(speed)
 
     if not paused:
         grid.step()
