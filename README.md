@@ -9,7 +9,7 @@ If you don't have these, and want a no-fuss install/setup, run the installation 
 
 ### Controls
 
-- P - Pause
+- P - Pause/Unpause
 - G - Place glider
 - S - Place Spaceship
 - U - Place Glider Gun
@@ -18,5 +18,14 @@ If you don't have these, and want a no-fuss install/setup, run the installation 
 
 - Left Click - Fill in cell (supports dragging the cursor to color in squares)
 - Right Click - Erase cell (supports dragging the cursor to color in squares)
+
+- Q - Slow the game down
+- W - Speed the game up
+
+The game starts paused. You'll have to unpause with `P`.
+
+Bonus:
+
+- B - This is supposed to be unbounded growth with a fixed starting pattern. The borders of the game prevent this, though, because they're collidable.
 
  ![preview](https://github.com/H4CKY54CK/game-of-life/blob/master/preview.png)
